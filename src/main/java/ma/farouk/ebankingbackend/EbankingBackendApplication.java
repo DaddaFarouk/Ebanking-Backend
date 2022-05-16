@@ -1,9 +1,11 @@
 package ma.farouk.ebankingbackend;
 
+import ma.farouk.ebankingbackend.entities.AccountOperation;
 import ma.farouk.ebankingbackend.entities.CurrentAccount;
 import ma.farouk.ebankingbackend.entities.Customer;
 import ma.farouk.ebankingbackend.entities.SavingAccount;
 import ma.farouk.ebankingbackend.enums.AccountStatus;
+import ma.farouk.ebankingbackend.enums.OperationType;
 import ma.farouk.ebankingbackend.repositories.AccountOperationRepository;
 import ma.farouk.ebankingbackend.repositories.BankAccountRepository;
 import ma.farouk.ebankingbackend.repositories.CustomerRepository;
@@ -53,6 +55,17 @@ public class EbankingBackendApplication {
                 savingAccount.setCustomer(customer);
                 savingAccount.setInterestRate(5.5);
                 bankAccountRepository.save(savingAccount);
+            });
+            bankAccountRepository.findAll().forEach(bankAccount -> {
+                for (int i = 0; i < 10; i++) {
+                    AccountOperation accountOperation = new AccountOperation();
+                    accountOperation.setOperationDate(new Date());
+                    accountOperation.setAmount(Math.random()*12000);
+                    accountOperation.setType(Math.random()>0.5?
+                            OperationType.DEBIT : OperationType.CREDIT);
+                    accountOperation.setBankAccount(bankAccount);
+                    accountOperationRepository.save(accountOperation);
+                }
             });
         };
     }
