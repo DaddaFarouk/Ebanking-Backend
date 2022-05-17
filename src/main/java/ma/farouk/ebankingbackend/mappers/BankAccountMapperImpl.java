@@ -1,8 +1,10 @@
 package ma.farouk.ebankingbackend.mappers;
 
+import ma.farouk.ebankingbackend.dtos.AccountOperationDTO;
 import ma.farouk.ebankingbackend.dtos.CurrentAccountDTO;
 import ma.farouk.ebankingbackend.dtos.CustomerDTO;
 import ma.farouk.ebankingbackend.dtos.SavingAccountDTO;
+import ma.farouk.ebankingbackend.entities.AccountOperation;
 import ma.farouk.ebankingbackend.entities.CurrentAccount;
 import ma.farouk.ebankingbackend.entities.Customer;
 import ma.farouk.ebankingbackend.entities.SavingAccount;
@@ -27,6 +29,7 @@ public class BankAccountMapperImpl {
         SavingAccountDTO savingAccountDTO = new SavingAccountDTO();
         BeanUtils.copyProperties(savingAccount, savingAccountDTO);
         savingAccountDTO.setCustomerDTO(fromCustomer(savingAccount.getCustomer()));
+        savingAccountDTO.setType(savingAccount.getClass().getSimpleName());
         return savingAccountDTO;
     }
     public SavingAccount fromSavingAccountDTO(SavingAccountDTO savingAccountDTO){
@@ -39,6 +42,7 @@ public class BankAccountMapperImpl {
         CurrentAccountDTO currentAccountDTO = new CurrentAccountDTO();
         BeanUtils.copyProperties(currentAccount, currentAccountDTO);
         currentAccountDTO.setCustomerDTO(fromCustomer(currentAccount.getCustomer()));
+        currentAccountDTO.setType(currentAccount.getClass().getSimpleName());
         return currentAccountDTO;
     }
     public CurrentAccount fromCurrentAccountDTO(CurrentAccountDTO currentAccountDTO){
@@ -46,5 +50,10 @@ public class BankAccountMapperImpl {
         BeanUtils.copyProperties(currentAccountDTO, currentAccount);
         currentAccount.setCustomer(fromCustomerDTO(currentAccountDTO.getCustomerDTO()));
         return currentAccount;
+    }
+    public AccountOperationDTO fromAccountOperation(AccountOperation accountOperation){
+        AccountOperationDTO accountOperationDTO = new AccountOperationDTO();
+        BeanUtils.copyProperties(accountOperation,accountOperationDTO);
+        return accountOperationDTO;
     }
 }
