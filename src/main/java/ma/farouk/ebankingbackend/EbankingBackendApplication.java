@@ -1,5 +1,6 @@
 package ma.farouk.ebankingbackend;
 
+import ma.farouk.ebankingbackend.dtos.CustomerDTO;
 import ma.farouk.ebankingbackend.entities.*;
 import ma.farouk.ebankingbackend.enums.AccountStatus;
 import ma.farouk.ebankingbackend.enums.OperationType;
@@ -30,10 +31,10 @@ public class EbankingBackendApplication {
     CommandLineRunner commandLineRunner(BankAccountService bankAccountService){
         return args -> {
             Stream.of("Hassan","Imane","Mohamed").forEach(name->{
-                Customer customer = new Customer();
-                customer.setName(name);
-                customer.setEmail(name+"@gmail.com");
-                bankAccountService.saveCustomer(customer);
+                CustomerDTO customerDTO = new CustomerDTO();
+                customerDTO.setName(name);
+                customerDTO.setEmail(name+"@gmail.com");
+                bankAccountService.saveCustomer(customerDTO);
             });
             bankAccountService.listCustomers().forEach(customer -> {
                 try {
