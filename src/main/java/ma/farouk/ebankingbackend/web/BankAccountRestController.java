@@ -5,14 +5,12 @@ import ma.farouk.ebankingbackend.dtos.AccountOperationDTO;
 import ma.farouk.ebankingbackend.dtos.BankAccountDTO;
 import ma.farouk.ebankingbackend.exceptions.BankAccountNotFoundException;
 import ma.farouk.ebankingbackend.services.BankAccountServiceImpl;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 public class BankAccountRestController {
     private BankAccountServiceImpl bankAccountService;
 
