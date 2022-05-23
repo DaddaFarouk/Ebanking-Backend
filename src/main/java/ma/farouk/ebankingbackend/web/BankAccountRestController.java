@@ -1,8 +1,7 @@
 package ma.farouk.ebankingbackend.web;
 
-import ma.farouk.ebankingbackend.dtos.AccountHistoryDTO;
-import ma.farouk.ebankingbackend.dtos.AccountOperationDTO;
-import ma.farouk.ebankingbackend.dtos.BankAccountDTO;
+import ma.farouk.ebankingbackend.dtos.*;
+import ma.farouk.ebankingbackend.exceptions.BalanceNotSufficientException;
 import ma.farouk.ebankingbackend.exceptions.BankAccountNotFoundException;
 import ma.farouk.ebankingbackend.services.BankAccountServiceImpl;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,7 @@ import java.util.List;
 @RestController
 @CrossOrigin("*")
 public class BankAccountRestController {
-    private BankAccountServiceImpl bankAccountService;
+    private final BankAccountServiceImpl bankAccountService;
 
     public BankAccountRestController(BankAccountServiceImpl bankAccountService) {
         this.bankAccountService = bankAccountService;
@@ -38,5 +37,28 @@ public class BankAccountRestController {
             @RequestParam(name="size", defaultValue = "5") int size)
             throws BankAccountNotFoundException {
         return bankAccountService.getAccountHistory(accountId,page,size);
+    }
+    @PostMapping("/accounts/debit")
+    public DebitDTO debit(@RequestBody DebitDTO debitDTO)
+            throws BankAccountNotFoundException, BalanceNotSufficientException {
+     this.bankAccountService.debit(debitDTO.getAccountId(),
+             debitDTO.getAmount(),
+             debitDTO.getDescription());
+     return debitDTO;
+    }
+    @PostMapping("/accounts/credit")
+    public CreditDTO credit(@RequestBody CreditDTO creditDTO)
+            throws BankAccountNotFoundException {
+        this.bankAccountService.credit(creditDTO.getAccountId(),
+                creditDTO.getAmount(),
+                creditDTO.getDescription());
+        return creditDTO;
+    }
+    @PostMapping("/accounts/transfer")
+    public void transfer(@RequestBody TransferRequestDTO transferRequestDTO)
+            throws BankAccountNotFoundException, BalanceNotSufficientException {
+        this.bankAccountService.transfer(transferRequestDTO.getAccountSource(),
+                transferRequestDTO.getAccountDest(),
+                transferRequestDTO.getAmount());
     }
 }

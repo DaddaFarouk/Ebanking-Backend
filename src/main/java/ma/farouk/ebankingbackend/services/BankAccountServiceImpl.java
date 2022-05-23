@@ -43,7 +43,7 @@ public class BankAccountServiceImpl implements BankAccountService{
     }
 
     @Override
-    public CurrentAccountDTO saveCurrentBankAccount(double initialBalance, double overDraft, Long customerId)
+    public void saveCurrentBankAccount(double initialBalance, double overDraft, Long customerId)
             throws CustomerNotFoundException {
         Customer customer = customerRepository.findById(customerId).orElse(null);
         if (customer==null)
@@ -55,11 +55,11 @@ public class BankAccountServiceImpl implements BankAccountService{
         currentAccount.setOverDraft(overDraft);
         currentAccount.setCustomer(customer);
         CurrentAccount savedCurrentAccount = bankAccountRepository.save(currentAccount);
-        return dtoMapper.fromCurrentAccount(savedCurrentAccount);
+        dtoMapper.fromCurrentAccount(savedCurrentAccount);
     }
 
     @Override
-    public SavingAccountDTO saveSavingBankAccount(double initialBalance, double interestRate, Long customerId)
+    public void saveSavingBankAccount(double initialBalance, double interestRate, Long customerId)
             throws CustomerNotFoundException {
         Customer customer = customerRepository.findById(customerId).orElse(null);
         if (customer==null)
@@ -71,7 +71,7 @@ public class BankAccountServiceImpl implements BankAccountService{
         savingAccount.setInterestRate(interestRate);
         savingAccount.setCustomer(customer);
         SavingAccount savedSavingAccount = bankAccountRepository.save(savingAccount);
-        return dtoMapper.fromSavingAccount(savedSavingAccount);
+        dtoMapper.fromSavingAccount(savedSavingAccount);
     }
 
     @Override
@@ -181,7 +181,7 @@ public class BankAccountServiceImpl implements BankAccountService{
         if (bankAccount==null)
             throw new BankAccountNotFoundException("Bank account not found");
         Page<AccountOperation> accountOperations =  accountOperationRepository
-                .findByBankAccountId(accountId, PageRequest.of(page,size));
+                .findByBankAccountIdOrderByOperationDateDesc(accountId, PageRequest.of(page,size));
         AccountHistoryDTO accountHistoryDTO = new AccountHistoryDTO();
         List<AccountOperationDTO> accountOperationDTOS = accountOperations.getContent().stream().map(op -> dtoMapper
                         .fromAccountOperation(op))
